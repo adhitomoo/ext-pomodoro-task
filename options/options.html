@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    body {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .field-row .field {
+      flex: 1;
+    }
+
+    .field-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .field-group .label {
+      margin-bottom: 0;
+    }
+
+    .test-connection {
+      margin-top: 12px;
+    }
+
+    .property-mapping {
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+
+    .property-mapping .field {
+      margin-bottom: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .auto-detect-info {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .theme-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .theme-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .theme-swatch:hover {
+      border-color: var(--primary-light);
+    }
+
+    .theme-swatch.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .swatch-preview {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+
+    .swatch-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .theme-swatch.active .swatch-name {
+      color: var(--primary);
+    }
+
+    .source-checkboxes {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .source-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+    }
+
+    .source-checkboxes input {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Settings</h1>
+  <p class="subtitle">Configure your Pomodoro timer and task integration</p>
+
+  <div class="card section">
+    <div class="section-title">Task Sources</div>
+    <div class="source-checkboxes">
+      <label><input type="checkbox" id="notionEnabled" checked> Notion</label>
+      <label><input type="checkbox" id="clickupEnabled" checked> ClickUp</label>
+      <label><input type="checkbox" id="googleTasksEnabled" checked> Google Tasks</label>
+    </div>
+  </div>
+
+  <div class="card section" id="notionSection">
+    <div class="section-title">Notion Integration</div>
+
+    <div class="field">
+      <label class="label">Integration Token</label>
+      <input type="password" id="notionToken" placeholder="secret_xxx...">
+    </div>
+
+    <div class="field">
+      <label class="label">Database ID</label>
+      <input type="text" id="notionDatabaseId" placeholder="Paste your Notion database ID">
+    </div>
+
+    <button class="btn-primary btn-small test-connection" id="testConnection">Test Connection</button>
+    <div id="connectionMessage"></div>
+
+    <div id="propertyMapping" class="property-mapping" style="display:none;">
+      <div class="field">
+        <label class="label">Pomodoro Count Property</label>
+        <select id="pomodoroCountProperty">
+          <option value="">-- None (don't track count) --</option>
+        </select>
+        <p class="auto-detect-info">Auto-detected number properties from your database</p>
+      </div>
+
+      <div class="field">
+        <label class="label">Status Property</label>
+        <select id="statusProperty">
+          <option value="">-- None (don't update status) --</option>
+        </select>
+        <p class="auto-detect-info">Auto-detected status properties from your database</p>
+      </div>
+
+      <div class="field">
+        <label class="label">Done Status Value</label>
+        <input type="text" id="doneStatusValue" placeholder="Done" value="Done">
+      </div>
+    </div>
+  </div>
+
+  <div class="card section" id="clickupSection" style="display:none;">
+    <div class="section-title">ClickUp Integration</div>
+
+    <div class="field">
+      <label class="label">API Token</label>
+      <input type="password" id="clickupToken" placeholder="pk_xxx...">
+    </div>
+
+    <button class="btn-primary btn-small test-connection" id="testClickUp">Test Connection</button>
+    <div id="clickupMessage"></div>
+
+    <div class="field" id="clickupListField" style="display:none;">
+      <label class="label">List</label>
+      <select id="clickupListId">
+        <option value="">-- Select a list --</option>
+      </select>
+    </div>
+
+    <div class="field field-group" id="clickupFilterField" style="display:none;">
+      <label class="label">Show only my tasks</label>
+      <label class="toggle">
+        <input type="checkbox" id="clickupFilterMe" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card section" id="googleTasksSection" style="display:none;">
+    <div class="section-title">Google Tasks Integration</div>
+
+    <div class="field">
+      <label class="label">Authorization</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary btn-small test-connection" id="connectGoogleTasks">Connect Google Account</button>
+        <button class="btn-small test-connection" id="disconnectGoogleTasks" style="display:none;background:var(--danger);color:white;">Disconnect</button>
+      </div>
+      <div id="googleTasksMessage"></div>
+    </div>
+
+    <div class="field" id="googleTasksListField" style="display:none;">
+      <label class="label">Task List</label>
+      <select id="googleTasksListId">
+        <option value="">-- Select a task list --</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card section">
+    <div class="section-title">Timer</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="label">Work (min)</label>
+        <input type="number" id="workDuration" min="1" max="90" value="25">
+      </div>
+      <div class="field">
+        <label class="label">Short Break (min)</label>
+        <input type="number" id="shortBreakDuration" min="1" max="30" value="5">
+      </div>
+      <div class="field">
+        <label class="label">Long Break (min)</label>
+        <input type="number" id="longBreakDuration" min="1" max="60" value="15">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Long Break Every N Sessions</label>
+      <input type="number" id="longBreakInterval" min="2" max="10" value="4">
+    </div>
+  </div>
+
+  <div class="card section">
+    <div class="section-title">Theme</div>
+
+    <div class="theme-options" id="themeOptions">
+      <div class="theme-swatch" data-theme="silver">
+        <div class="swatch-preview" style="background: linear-gradient(135deg, #E6E6E6, #A8B8C8);"></div>
+        <span class="swatch-name">Silver</span>
+      </div>
+      <div class="theme-swatch" data-theme="ocean">
+        <div class="swatch-preview" style="background: linear-gradient(135deg, #5C7AEA, #45C4B0);"></div>
+        <span class="swatch-name">Ocean</span>
+      </div>
+      <div class="theme-swatch" data-theme="royal">
+        <div class="swatch-preview" style="background: linear-gradient(135deg, #3D56B2, #E8927C);"></div>
+        <span class="swatch-name">Royal</span>
+      </div>
+      <div class="theme-swatch" data-theme="midnight">
+        <div class="swatch-preview" style="background: linear-gradient(135deg, #14279B, #E8505B);"></div>
+        <span class="swatch-name">Midnight</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <div class="section-title">Preferences</div>
+
+    <div class="field field-group">
+      <label class="label">Sound Alert</label>
+      <label class="toggle">
+        <input type="checkbox" id="soundEnabled" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="field field-group">
+      <label class="label">Auto-start Break</label>
+      <label class="toggle">
+        <input type="checkbox" id="autoStartBreak">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="field field-group">
+      <label class="label">Auto-start Work</label>
+      <label class="toggle">
+        <input type="checkbox" id="autoStartWork">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-primary" id="saveBtn">Save Settings</button>
+    <div id="saveMessage"></div>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "notion-pomodoro",
+  "version": "1.0.0",
+  "description": "Pomodoro timer Chrome extension with Notion integration",
+  "private": true,
+  "scripts": {
+    "build": "bestzip notion-pomodoro.zip manifest.json background/ popup/ options/ assets/ lib/ utils/ offscreen/ content/"
+  },
+  "devDependencies": {
+    "bestzip": "^2.2.1"
+  }
+}
